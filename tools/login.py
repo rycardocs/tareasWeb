@@ -37,7 +37,6 @@ def ingresar(user, password):
     engine.dispose()
   return jsonify(respuesta)
 
-
 def verificar(UUID):
     try:
       with engine.connect() as connection:
@@ -48,4 +47,6 @@ def verificar(UUID):
           respuesta = {'return': False}
     except Exception as e:
       respuesta = {"return": False, "error": str(e)}
+    finally:
+      engine.dispose()
     return respuesta

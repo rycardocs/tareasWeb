@@ -19,13 +19,17 @@ class Tareas(BaseModel):
   req: str
   fecha: Optional[str] = None
   prioridad: Optional[str] = None
+  estado: Optional[int] = None
   titulo: Optional[str] = None
   descripcion: Optional[str] = None
   uuid: Optional[str] = None
+  idTarea: Optional[int] = None
+  creacion: Optional[str] = None
+  Vencimiento: Optional[datetime] = None
+
 
 
 @app.post('/')
-
 def log():
   try:
     data = request.json
@@ -42,17 +46,22 @@ def log():
   
 @app.post('/tareas')
 def inicio():
-  try:
     data = request.json
     tarea = Tareas(**data)
     if tarea.req == 'traerTareas':
       return traerTareas(tarea.uuid)
     elif tarea.req == 'subirTarea':
       return subirTarea(tarea.uuid,tarea.titulo,tarea.fecha,tarea.prioridad,tarea.descripcion)
-  except Exception as e:
-    return jsonify({"error": str(e)})
-
-  
+    elif tarea.req == 'filtrar':
+      return filtrarTareas(tarea.uuid,tarea.prioridad)
+    elif tarea.req == 'eliminar':
+      return eliminarTarea(tarea.uuid,tarea.idTarea)
+    elif tarea.req == 'editar':
+      return editarTarea(tarea.idTarea,tarea.titulo,tarea.fecha,tarea.prioridad,tarea.descripcion,tarea.estado)
+    elif tarea.req == 'buscar':
+      return buscar(tarea.uuid,tarea.titulo)
+    else:
+      return jsonify({"error": 'No valido'})
 
 if __name__ == '__main__':
     app.run(debug=True)
